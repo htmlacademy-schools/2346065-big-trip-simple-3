@@ -17,7 +17,7 @@ const getRandomSliceFromItems = (items) => {
   const shuffled = [...items].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, n);
 };
-//что-то
+
 const createIDgenerator = () => {
   let id = 0;
   return () => ++id;
