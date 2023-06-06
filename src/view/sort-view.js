@@ -1,9 +1,10 @@
-import BaseView from './BaseView';
+import {createElement} from '../render.js';
 
-const createTripEventsSortingTemplate = () => `
-  <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+function createSortTemplate() {
+  return (
+    `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
-      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day">
       <label class="trip-sort__btn" for="sort-day">Day</label>
     </div>
     <div class="trip-sort__item  trip-sort__item--event">
@@ -15,20 +16,33 @@ const createTripEventsSortingTemplate = () => `
       <label class="trip-sort__btn" for="sort-time">Time</label>
     </div>
     <div class="trip-sort__item  trip-sort__item--price">
-      <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+      <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" checked>
       <label class="trip-sort__btn" for="sort-price">Price</label>
     </div>
     <div class="trip-sort__item  trip-sort__item--offer">
       <input id="sort-offer" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-offer" disabled>
       <label class="trip-sort__btn" for="sort-offer">Offers</label>
     </div>
-  </form>
-`;
-
-class TripEventsSortingView extends BaseView {
-  getTemplate() {
-    return createTripEventsSortingTemplate();
-  }
+  </form>`
+  );
 }
 
-export default TripEventsSortingView;
+export default class SortView {
+  #element = null;
+
+  get template() {
+    return createSortTemplate;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  removeElement() {
+    this.element = null;
+  }
+}
