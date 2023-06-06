@@ -178,10 +178,6 @@ const offersByType = [
     type: 'sightseeing',
     offers: sightseeingOffers
   },
-  {
-    type: 'restaurant',
-    offers: restaurantOffers
-  },
 ];
 
 const getOffersByType = (type) => {
