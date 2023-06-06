@@ -1,6 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterView from '../view/filter-view.js';
-import {FilterType, UpdateType} from '../const.js';
+import {FilterType, FilterTypeDescriptions, UpdateType} from '../const.js';
+import { filter } from '../utils/filter.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -19,16 +20,8 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    return [
-      {
-        type: FilterType.EVERYTHING,
-        name: 'EVERYTHING'
-      },
-      {
-        type: FilterType.FUTURE,
-        name: 'FUTURE'
-      }
-    ];
+    return [FilterType.EVERYTHING, FilterType.FUTURE, FilterType.PAST].map((type) =>
+      ({ type, name: FilterTypeDescriptions[type], count: filter[type](this.#tripPointsModel.tripPoints).length}));
   }
 
   init() {
