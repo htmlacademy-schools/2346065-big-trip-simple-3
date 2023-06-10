@@ -1,11 +1,16 @@
-import { capitalizeType, getItemFromItemsById } from '../utils/utils.js';
+
+import {capitalizeType, getItemFromItemsById} from '../utils/utils.js';
 import { convertToEventDateTime, convertToEventDate, convertToDateTime, convertToTime } from '../utils/formatTime-Utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import he from 'he';
 
 
 const createOffersTemplate = (offers, offersIDs, type) => {
-  const currentTypeOffers = offers.find((el) => el.type === type).offers;
+  const currentTypes = offers.find((el) => el.type === type);
+  let currentTypeOffers = [];
+  if (currentTypes) {
+    currentTypeOffers = currentTypes.offers;
+  }
   return currentTypeOffers.filter((el) => offersIDs.includes(el.id)).map((offer) => `
     <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
@@ -15,10 +20,11 @@ const createOffersTemplate = (offers, offersIDs, type) => {
   ).join('');
 };
 
-const createTripPointTemplate = (tripPoint, destinations, offers) => {
+function createTripPointTemplate(tripPoint, destinations, offers) {
   const destination = getItemFromItemsById(destinations, tripPoint.destination);
+
   return (`
-  <li class="trip-events__item">
+    <li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${convertToEventDateTime(tripPoint.dateFrom)}">${convertToEventDate(tripPoint.dateFrom)}</time>
       <div class="event__type">
@@ -45,7 +51,7 @@ const createTripPointTemplate = (tripPoint, destinations, offers) => {
     </div>
   </li>`
   );
-};
+}
 
 export default class TripPointView extends AbstractView {
   #tripPoint = null;
@@ -64,7 +70,12 @@ export default class TripPointView extends AbstractView {
   }
 
   get template() {
-    return createTripPointTemplate(this.#tripPoint, this.#destinations, this.#offers);
+    let template = '';
+    try {
+      template = createTripPointTemplate(this.#tripPoint, this.#destinations, this.#offers);
+    }
+    catch(err) { location.reload(); }
+    return template;
   }
 
   #editClickHandler = (evt) => {

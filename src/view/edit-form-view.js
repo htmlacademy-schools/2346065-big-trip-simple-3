@@ -1,10 +1,10 @@
-import { capitalizeType, getItemFromItemsById } from '../utils/utils.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { convertToBasicime } from '../utils/formatTime-Utils.js';
 import { pointTypes } from '../const.js';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import {capitalizeType, getItemFromItemsById} from '../utils/utils.js';
 
 const BLANK_TRIPPOINT = {
   basePrice: 999,
@@ -49,7 +49,11 @@ const createOffersTemplate = (currentTypeOffers, checkedOffers, id, isDisabled) 
 );
 
 const createEventDetailsTemplate = (tripPoint, destination, offers, isDisabled) => {
-  const currentTypeOffers = offers.find((el) => el.type === tripPoint.type).offers;
+  const currentTypes = offers.find((el) => el.type === tripPoint.type);
+  let currentTypeOffers = [];
+  if (currentTypes) {
+    currentTypeOffers = currentTypes.offers;
+  }
   return `
   <section class="event__section  event__section--offers ${(currentTypeOffers.length === 0) ? 'visually-hidden' : ''}" >
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -165,6 +169,10 @@ export default class EditFormView extends AbstractStatefulView {
 
   constructor({tripPoint = BLANK_TRIPPOINT, destinations, offers, onFormSubmit, onRollUpButton, isEditForm = true, onDeleteClick}) {
     super();
+    if (tripPoint === BLANK_TRIPPOINT) {
+      tripPoint.destination = Math.floor(Math.random() * destinations.length);
+      tripPoint.type = pointTypes[Math.floor(Math.random() * pointTypes.length)];
+    }
     this._setState(EditFormView.parseTripPointToState(tripPoint, offers));
 
     this.#destinations = destinations;
@@ -322,8 +330,13 @@ export default class EditFormView extends AbstractStatefulView {
   };
 
   static parseTripPointToState(tripPoint, offers) {
+    const currentTypes = offers.find((el) => el.type === tripPoint.type);
+    let currentTypeOffers = [];
+    try {
+      currentTypeOffers = currentTypes.offers;
+    } catch (err) {location.reload();}
     return {...tripPoint,
-      currentTypeOffers: offers.find((el) => el.type === tripPoint.type).offers,
+      currentTypeOffers,
       isDisabled: false,
       isSaving: false,
       isDeleting: false,
