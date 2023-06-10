@@ -92,6 +92,23 @@ export default class TripPointPresenter {
     }
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#tripPointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editFormComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editFormComponent.shake(resetFormState);
+  }
+
   setDeleting() {
     if (this.#mode === Mode.EDITING) {
       this.#editFormComponent.updateElement({
@@ -127,23 +144,6 @@ export default class TripPointPresenter {
     this.#replacePointToForm();
     document.body.addEventListener('keydown', this.#ecsKeyDownHandler);
   };
-
-  setAborting() {
-    if (this.#mode === Mode.DEFAULT) {
-      this.#tripPointComponent.shake();
-      return;
-    }
-
-    const resetFormState = () => {
-      this.#editFormComponent.updateElement({
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-      });
-    };
-
-    this.#editFormComponent.shake(resetFormState);
-  }
 
   #handleFormSubmit = (update) => {
     const isMinorUpdate = !isDatesEqual(this.#tripPoint.dateFrom, update.dateFrom) || this.#tripPoint.basePrice !== update.basePrice;
