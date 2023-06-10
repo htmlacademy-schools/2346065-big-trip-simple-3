@@ -35,6 +35,18 @@ export default class NewTripPointPresenter {
     document.body.addEventListener('keydown', this.#ecsKeyDownHandler);
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this.#tripPointEditComponent.updateElement({
+        isDisabled: false,
+        isSavinf: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#tripPointEditComponent.shake(resetFormState);
+  }
+
   destroy() {
     if (this.#tripPointEditComponent === null) {
       return;
@@ -53,18 +65,6 @@ export default class NewTripPointPresenter {
       isDisabled: true,
       isSaving: true,
     });
-  }
-
-  setAborting() {
-    const resetFormState = () => {
-      this.#tripPointEditComponent.updateElement({
-        isDisabled: false,
-        isSavinf: false,
-        isDeleting: false,
-      });
-    };
-
-    this.#tripPointEditComponent.shake(resetFormState);
   }
 
   #ecsKeyDownHandler = (evt) => {
