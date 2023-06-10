@@ -19,6 +19,11 @@ export default class NewTripPointButtonView extends AbstractView {
 
   #clickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    try {
+      this.#handleClick();
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('Some problems... Try later');
+    }
   };
 }

@@ -81,10 +81,8 @@ export default class NewTripPointPresenter {
       UpdateType.MINOR,
 
       this.#deleteId(tripPoint)
-
     );
 
-    this.destroy();
   };
 
   #handleDeleteClick = () => {
